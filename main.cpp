@@ -34,7 +34,7 @@ class Matrix {
 
         //add 2 matrices
         //returns a new matrix
-        void add(const Matrix& other) const {
+        Matrix add(const Matrix& other) const {
             Matrix result(N);
             for (int i = 0; i < N; ++i) {
                 for (int j = 0; j < N; ++j) {
@@ -46,13 +46,29 @@ class Matrix {
 
         //multiply 2 matrices
         //returns a new matrix
-        void multiply(const Matrix& other) const {
+        Matrix multiply(const Matrix& other) const {
+            //use square multiplication algorithm
             Matrix result(N);
-            for (int i )
+            for (int i = 0; i < N; ++i) {
+                for (int j = 0; j < N; ++j) {
+                    result.data[i][j] = 0;
+                    for (int k = 0; k < N; ++k) {
+                        result.data[i][j] += this->data[i][k] * other.data[k][j];
+                    }
+                }
+            }
+            return result;
         } 
 
-        void sumOfDiagElems() {
-
+        void printDiagSums() const {
+            int mainSum = 0;
+            int secSum = 0;
+            for (int i = 0; i < N; ++i) {
+                mainSum += data[i][i]; //from top left to bottom right
+                secSum += data[i][N-i-1]; //from top right to bottom left
+            }
+            std::cout << "Main diagonal sum: " << mainSum << std::endl;
+            std::cout << "Secondary diagonal sum: " << secondarySum << std::endl;
         }
 
         void swapRows() {
@@ -118,6 +134,17 @@ int main() {
     std::cout << "\n     ---Matrix B---" << std::endl;
     B.print();
     
+    //add 2 matrices
+    std::cout << "\n     ---A + B---" << std::endl;
+    Matrix C_add = A.add(B);
+    C_add.print();
+
+    //multiply 2 matrices
+    std::cout << "\n     ---A * B---" << std::endl;
+    Matrix C_mult = A.multiply(B);
+    C_mult.print();
+
+    //
 
     return 0;
 }
