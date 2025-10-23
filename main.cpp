@@ -148,6 +148,13 @@ int main() {
     
     int N;
     file >> N; //reads first character of file and stores it in N (# of rows and cols)
+
+    //check if file can be read
+    if (file.fail()) {
+        std::cerr << "ErrorCould not read matrix size N from file" << std::endl;
+        return 1; //exit with error
+    }
+    //check if N <= 0
     if (N <= 0) {
         std::cerr << "Error: Invalid matrix size N=" << N << std::endl;
         return 1; //exit with error
@@ -159,7 +166,17 @@ int main() {
 
     //load data from input file
     A.load(file);
+    if (file.fail()) { //check if matrix is too small or has bad data (e.g. strings instead of ints)
+        std::cerr << "Error: Failed loading Matrix A; incomplete or contains bad data." << std::endl;
+        return 1;
+    }
+
     B.load(file);
+    if (file.fail()) {
+        std::cerr << "Error: Failed loading Matrix B; incomplete or contains bad data." << std::endl;
+        return 1;
+    }
+
     file.close();
 
     //print original matrices
