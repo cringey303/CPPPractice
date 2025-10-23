@@ -3,6 +3,7 @@
 #include <utility> //for swap (std::swap)
 #include <vector> //for matrix format
 #include <iomanip> //for output formatting (std::setw)
+#include <sstream> //for parsing integers from lines
 
 class Matrix {
     public:
@@ -125,20 +126,37 @@ class Matrix {
 
 
 int getIntInput(const std::string& prompt) {
+    std::string input;
     int value;
-    std::cout << prompt;
-    while (!(std::cin >> value)) {
+    while (true) {
+        std::cout << prompt;
+        std::getline(std::cin, input);
+        
+        //check for empty input or only whitespace
+        if (input.empty() || input.find_first_not_of(" \t\n\r") == std::string::npos) {
+            std::cout << "Invalid input. Enter a valid integer: ";
+            continue;
+        }
+        
+        //try to convert string to integer
+        std::istringstream iss(input);
+        if (iss >> value && iss.get() == EOF) {
+            return value;
+        }
+        
         std::cout << "Invalid input. Enter a valid integer: ";
-        std::cin.clear();
-        std::cin.ignore(10000, '\n');
     }
-    return value;
 }
 
 int main() {
 	std::string filename;
-	std::cout << "Enter a matrix file: ";
-    std::cin >> filename;
+    std::cout << "Enter a matrix file: ";
+    std::getline(std::cin, filename);
+    //make sure filename is not empty or just whitespace
+    while(filename.empty() || filename.find_first_not_of(" \t\n\r") == std::string::npos) {
+        std::cout << "Invalid input. Please enter a filename: ";
+        std::getline(std::cin, filename);
+}
 
     std::ifstream file(filename);
     if (!file.is_open()) {
