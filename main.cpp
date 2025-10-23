@@ -76,7 +76,7 @@ class Matrix {
         void swapRows(int r1, int r2) {
             if (isRowValid(r1) && isRowValid(r2)) {
                 //swap entire vector at once
-                std::swap(data[r1], data[r2])
+                std::swap(data[r1], data[r2]);
                 std::cout << "Matrix after swapping rows " << r1 << " and " << r2 << ":" << std::endl;
                 print();
             } else {
