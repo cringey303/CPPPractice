@@ -35,7 +35,7 @@ class Matrix {
 
         //add 2 matrices
         //returns a new matrix
-        Matrix add(const Matrix& r) const {
+        Matrix operator+(const Matrix& r) const {
             Matrix result(N);
             for (int i = 0; i < N; ++i) {
                 for (int j = 0; j < N; ++j) {
@@ -47,7 +47,7 @@ class Matrix {
 
         //multiply 2 matrices
         //returns a new matrix
-        Matrix multiply(const Matrix& r) const {
+        Matrix operator*(const Matrix& r) const {
             //use square multiplication algorithm
             Matrix result(N);
             for (int i = 0; i < N; ++i) {
@@ -72,42 +72,6 @@ class Matrix {
             std::cout << "Secondary diagonal sum: " << secSum << std::endl;
         }
 
-        //modifies this matrix
-        void swapRows(int r1, int r2) {
-            if (isRowValid(r1) && isRowValid(r2)) {
-                //swap entire vector at once
-                std::swap(data[r1], data[r2]);
-                std::cout << "Matrix after swapping rows " << r1 << " and " << r2 << ":" << std::endl;
-                print();
-            } else {
-                std::cout << "Error: Invalid row index." << std::endl;
-            }
-        }
-
-        //modifies this matrix
-        void swapCols(int c1, int c2) {
-            if (isColValid(c1) && isColValid(c2)) {
-                //swap element by element down columns
-                for (int i = 0; i < N; ++i) {
-                    std::swap(data[i][c1], data[i][c2]);
-                }
-                std::cout << "Matrix after swapping columns " << c1 << " and " << c2 << ":" << std::endl;
-                print();
-            } else {
-                std::cout << "Error: Invalid column index." << std::endl;
-            }
-        }
-
-        // takes in row, col, and a new value and updates that spot in matrix if it is a valid spot
-        void updateElement(int r, int c, int value) {
-            if (isValid(r, c)) {
-                data[r][c] = value;
-                std::cout << "Matrix after updating element at (" << r << ", " << c << "):" << std::endl;
-                print();
-            } else {
-                std::cout << "Error: Invalid index." << std::endl;
-            }
-        }
     private:
         int N; //size
         std::vector<std::vector<int>> data; //2d grid that holds values
@@ -122,9 +86,52 @@ class Matrix {
             return isRowValid(r) && isColValid(c);
         }
 
+        //non-destructive friend functions to access private members
+        friend Matrix swapRows(Matrix m, int r1, int r2);
+        friend Matrix swapCols(Matrix m, int c1, int c2);
+        friend Matrix updateElement(Matrix m, int r, int c, int value);
+
 };
 
+//non-destructive
+Matrix swapRows(Matrix m, int r1 = 0, int r2 = 1) {
+    if (m.isRowValid(r1) && m.isRowValid(r2)) {
+        //swap entire vector at once
+        std::swap(m.data[r1], m.data[r2]);
+        std::cout << "Matrix after swapping rows " << r1 << " and " << r2 << ":" << std::endl;
+        m.print();
+    } else {
+        std::cout << "Error: Invalid row index." << std::endl;
+    }
+    return m; //return modified matrix copy
+}
 
+//non-destructive
+Matrix swapCols(Matrix m, int c1 = 0, int c2 = 1) {
+    if (isColValid(c1) && isColValid(c2)) {
+        //swap element by element down columns
+        for (int i = 0; i < m.N; ++i) {
+            std::swap(m.data[i][c1], m.data[i][c2]);
+        }
+        std::cout << "Matrix after swapping columns " << c1 << " and " << c2 << ":" << std::endl;
+        m.print();
+    } else {
+        std::cout << "Error: Invalid column index." << std::endl;
+    }
+    return m; //return modified matrix copy
+}
+
+//non-destructive. Takes in row, col, and a new value and updates that spot in matrix if it is a valid spot
+Matrix updateElement(Matrix m, int r = 0, int c = 0, int value = 100) {
+    if (m.isValid(r, c)) {
+        m.data[r][c] = value;
+        std::cout << "Matrix after updating element at (" << r << ", " << c << "):" << std::endl;
+        m.print();
+    } else {
+        std::cout << "Error: Invalid index." << std::endl;
+    }
+    return m; //return modified matrix copy
+}
 int getIntInput(const std::string& prompt) {
     std::string input;
     int value;
@@ -205,12 +212,12 @@ int main() {
     
     //add 2 matrices
     std::cout << "\n     ---A + B---" << std::endl;
-    Matrix C_add = A.add(B);
+    Matrix C_add = A + B;
     C_add.print();
 
     //multiply 2 matrices
     std::cout << "\n     ---A * B---" << std::endl;
-    Matrix C_mult = A.multiply(B);
+    Matrix C_mult = A * B;
     C_mult.print();
 
     //print diagonal sums
@@ -224,14 +231,14 @@ int main() {
     std::cout << "\n -----Swap Rows-----" << std::endl;
     int r1 = getIntInput("Enter first row index to swap: ");
     int r2 = getIntInput("Enter second row index to swap: ");
-    A.swapRows(r1, r2);
+    swapRows(A, r1, r2);
     
     //swap cols and display result
     std::cout << "\n -----Swap Columns-----" << std::endl;
     int c1 = getIntInput("Enter first column index to swap: ");
     int c2 = getIntInput("Enter second column index to swap: ");
     //A is already modified from rows swap
-    A.swapCols(c1, c2);
+    swapCols(A, c1, c2);
 
     //update element
     std::cout << "\n -----Update Element-----" << std::endl;
@@ -239,7 +246,7 @@ int main() {
     int c = getIntInput("Enter column index to update: ");
     int value = getIntInput("Enter new value: ");
     //A is already modified from rows and cols swap
-    A.updateElement(r, c, value);
+    updateElement(A, r, c, value);
 
     return 0;
 }
