@@ -4,10 +4,10 @@ This is a C++ program that implements string-based arithmetic operations in C++ 
 
 ## Features
 
-* **File Input:** Reads pairs of numbers from a user-specified file.
-* **String-Only Arithmetic:** Implements string-only addition, handling positive/negative numbers and decimal alignment.
-* **Custom Validation:** Validates each number string with strict formatting rules (`(+|-)A(.B)`) without using `try-catch` or standard conversion functions.
-* **Error Handling:** Detects and reports bad file and invalid number formats.
+* **File Input:** Reads matrices from a user-specified file.
+* **Custom Matrix Class:** All operations are within a Matrix class, keeping data private and exposing operations through public methods and friends.
+* **Operator Overloading:** Matrix addition and multiplication are implemented with `operator+` and `operator*`.
+* **Non-Destructive Functions:** `swapRows`, `swapCols`, and `updateElement` are implemented as standalone `friend` functions that modify a copy of the matrix.
 
 ## How to Run
 
@@ -34,7 +34,7 @@ Once built, you can run the program from your terminal.
 
 ```bash
 $ make
-g++ -std=c++11 -Wall -g -o calculator main.cpp
+g++ -std=c++11 -Wall -g -o matrix_lab main.cpp
 
 $ ./main
 Enter a matrix file: input.txt
