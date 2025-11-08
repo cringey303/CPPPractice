@@ -108,7 +108,7 @@ Matrix swapRows(Matrix m, int r1 = 0, int r2 = 1) {
 
 //non-destructive
 Matrix swapCols(Matrix m, int c1 = 0, int c2 = 1) {
-    if (isColValid(c1) && isColValid(c2)) {
+    if (m.isColValid(c1) && m.isColValid(c2)) {
         //swap element by element down columns
         for (int i = 0; i < m.N; ++i) {
             std::swap(m.data[i][c1], m.data[i][c2]);
@@ -163,13 +163,13 @@ int main() {
     while(filename.empty() || filename.find_first_not_of(" \t\n\r") == std::string::npos) {
         std::cout << "Invalid input. Please enter a filename: ";
         std::getline(std::cin, filename);
-}
+    }
 
     std::ifstream file(filename);
     if (!file.is_open()) {
-            std::cerr << "Error: Could not open file " << filename << std::endl;
-            return 1; //exit with error
-        }
+        std::cerr << "Error: Could not open file " << filename << std::endl;
+        return 1; //exit with error
+    }
     
     int N;
     file >> N; //reads first character of file and stores it in N (# of rows and cols)
